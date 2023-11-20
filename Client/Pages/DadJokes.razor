@@ -1,0 +1,57 @@
+﻿@page "/dadjokes"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using blazorwasm.Shared
+@attribute [Authorize]
+@inject HttpClient Http
+
+<PageTitle>Cloud PSO Movember Dad Jokes 50/50</PageTitle>
+
+<h1>Movember Dad Jokes</h1>
+
+<p>These are the jokes that have been submitted so far.</p>
+
+@if (dadjokes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date Submitted</th>
+                <th>Submitted By</th>
+                <th>No. Of Votes</th>
+                <th>Joke</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dadjoke in dadjokes)
+            {
+                <tr>
+                    <td>@dadjoke.DateSubmitted.ToShortDateString()</td>
+                    <td>@dadjoke.SubmittedBy</td>
+                    <td>@dadjoke.NoOfVotes</td>
+                    <td>@dadjoke.Joke</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private DadJoke[]? dadjokes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            dadjokes = await Http.GetFromJsonAsync<DadJoke[]>("DadJoke");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}
