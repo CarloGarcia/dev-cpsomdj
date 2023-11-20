@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using demo_blazor_swa_auth.Shared;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace demo_blazor_swa_auth.Server.Controllers;
 
@@ -26,11 +28,13 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            Summary = userId // Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
     }
