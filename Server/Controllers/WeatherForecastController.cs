@@ -28,13 +28,15 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var email = User.FindFirstValue("emails");
+        var name = User.FindFirstValue("name");
 
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = userId // Summaries[Random.Shared.Next(Summaries.Length)]
+            Summary = $"{name} <{email}> - ({userId})" // Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
     }
