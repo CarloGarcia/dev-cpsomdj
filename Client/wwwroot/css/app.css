@@ -2,10 +2,19 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: white;
+    background-color: black;
 }
 
 h1:focus {
     outline: none;
+}
+
+.text-label {
+    font-weight: bold;
+    background: -webkit-linear-gradient(left,#ff8a00, #dd4cff,#500561);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 a, .btn-link {

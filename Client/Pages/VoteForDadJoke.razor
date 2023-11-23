@@ -12,32 +12,36 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 
-<h3>Vote for your favorite Dad Joke!</h3>
+<h3 class="text-label">Vote for your favorite Dad Joke!</h3>
 
 @if (dadjokes == null)
 {
-    <p>Loading jokes...</p>
+    <p class="text-label">Loading jokes...</p>
 }
 else if (dadjokes.Length == 0)
 {
-    <p>No jokes found.</p>
+    <p class="text-label">No jokes found.</p>
+}
+else if (_bCanVote == false) 
+{
+    <p class="text-label">Thank you for voting! Your vote has already been recorded.</p>
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Joke</th>
-                <th>Vote</th>
+                <th class="text-label">Joke</th>
+                <th class="text-label">Vote</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var joke in dadjokes)
             {
                 <tr>
-                    <td>@joke.Joke</td>
+                    <td style="color: white;">@joke.Joke</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="() => VoteForJoke(joke.Id)">Vote</button>
+                        <button class="btn btn-primary" @onclick="() => VoteForJoke(joke.Id)" enable>Vote</button>
                     </td>
                 </tr>
             }
@@ -49,13 +53,11 @@ else
     private DadJoke[]? dadjokes;
 
     private Vote? _vote;
+    private bool _bCanVote = true;
 
     public AccessToken AccessToken { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
-        dadjokes = await Http.GetFromJsonAsync<DadJoke[]>("DadJoke");
-
         var accessTokenResult = await AuthorizationService.RequestAccessToken();
         if (!accessTokenResult.TryGetToken(out var token))
         {
@@ -71,13 +73,20 @@ else
         _vote = new Vote();
         _vote!.Email = email;
         _vote!.UserId = userId;
-        _vote!.SubmittedBy = submittedBy;            
+        _vote!.SubmittedBy = submittedBy;
+
+        Vote[]? votes = await Http.GetFromJsonAsync<Vote[]>($"Vote/votes/{userId}");
+        if (votes != null)
+        {
+            _bCanVote = votes.Count() == 0;
+        };          
+        dadjokes = await Http.GetFromJsonAsync<DadJoke[]>("DadJoke");
     }
 
     private async Task VoteForJoke(string id)
     {
         Vote vote = new Vote{
-            Id = id,
+            JokeId = id,
             DateSubmitted = DateTime.Now,
             Email = _vote.Email,
             UserId = _vote.UserId,
@@ -94,6 +103,7 @@ else
             var error = await response.Content.ReadAsStringAsync();
             Console.WriteLine(error);
         }
+        _bCanVote = false;
     }
 
     private string GetClaim(IDictionary<string, object> claims, string claimType)

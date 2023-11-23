@@ -12,17 +12,17 @@
 @inject HttpClient Http
 
 <EditForm Model="@Model" OnValidSubmit="@Submit">
+    <h1 class="text-label">Your Dad Joke Entry</h1>
+    <h2 class="text-label">Please add your dad joke here:</h2>
+    <br/>
     <DataAnnotationsValidator />
     <ValidationSummary />
-
-    <InputText @bind-Value="Model!.Joke" />
+    <InputTextArea @bind-Value="Model!.Joke" style="width: 100%;" rows="4" spellcheck="true" maxlength="1000"/>
+    <br/>
     <button type="submit">Submit</button>
 </EditForm>
 
 @code {
-    // [CascadingParameter]
-    // private Task<AuthenticationState> AuthenticationState { get; set; }
-    // public ClaimsPrincipal AuthenticatedUser { get; set; }
     public AccessToken AccessToken { get; set; }
     
     public DadJoke? Model { get; set; }

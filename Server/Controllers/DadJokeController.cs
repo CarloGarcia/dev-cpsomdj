@@ -14,17 +14,19 @@ namespace demo_blazor_swa_auth.Server.Controllers;
 public class DadJokeController : ControllerBase
 {
     private readonly ILogger<DadJokeController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public DadJokeController(ILogger<DadJokeController> logger)
+    public DadJokeController(ILogger<DadJokeController> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
 
     [HttpGet]
     public IEnumerable<DadJoke> Get()
     {
-        var azureFunctionBaseUrl = "http://localhost:7135/"; // Environment.GetEnvironmentVariable("AzureFunctionBaseUrl");
-        var azureFunctionKey = "Y8tzM_4SZBCU4SLYtOrsqOenuXLLo_SjhFoiWiVENrWMAzFuSWGMPw=="; // Environment.GetEnvironmentVariable("AzureFunction_GetDadJokes_Key");
+        var azureFunctionBaseUrl = _configuration.GetValue<string>("AzureFunctionBaseUrl");
+        var azureFunctionKey = _configuration.GetValue<string>("AzureFunction_GetDadJokes_Key");
 
         var httpClient = new HttpClient();
         var url = $"{azureFunctionBaseUrl}api/GetDadJokes?code={azureFunctionKey}";
@@ -45,8 +47,8 @@ public class DadJokeController : ControllerBase
     [HttpPost]
     public void Post([FromBody] DadJoke dadJoke)
     {
-        var azureFunctionBaseUrl = "http://localhost:7135/"; // Environment.GetEnvironmentVariable("AzureFunctionBaseUrl");
-        var azureFunctionKey = Environment.GetEnvironmentVariable("AzureFunction_AddDadJoke_Key");
+        var azureFunctionBaseUrl = _configuration.GetValue<string>("AzureFunctionBaseUrl");
+        var azureFunctionKey = _configuration.GetValue<string>("AzureFunction_AddDadJoke_Key");
 
         var httpClient = new HttpClient();        
         var url = $"{azureFunctionBaseUrl}api/AddDadJoke?code={azureFunctionKey}";
