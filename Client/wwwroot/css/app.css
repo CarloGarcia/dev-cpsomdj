@@ -17,6 +17,13 @@ h1:focus {
     -webkit-text-fill-color: transparent;
 }
 
+.text-label-b {
+    font-weight: bold;
+    background: -webkit-linear-gradient(right,#ff8a00, #dd4cff,#500561);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 a, .btn-link {
     color: #0071c1;
 }
