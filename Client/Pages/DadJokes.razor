@@ -47,7 +47,11 @@ else
     {
         try
         {
-            dadjokes = await Http.GetFromJsonAsync<DadJoke[]>("DadJoke");
+            var response = await Http.GetFromJsonAsync<DadJoke[]>("DadJoke");
+            if (response != null)
+            {
+                dadjokes = response.OrderByDescending(joke => joke.NoOfVotes).ToArray();
+            }
         }
         catch (AccessTokenNotAvailableException exception)
         {
