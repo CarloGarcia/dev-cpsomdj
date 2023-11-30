@@ -47,20 +47,20 @@ public class DadJokeController : ControllerBase
     [HttpPost]
     public void Post([FromBody] DadJoke dadJoke)
     {
-        var azureFunctionBaseUrl = _configuration.GetValue<string>("AzureFunctionBaseUrl");
-        var azureFunctionKey = _configuration.GetValue<string>("AzureFunction_AddDadJoke_Key");
+        // var azureFunctionBaseUrl = _configuration.GetValue<string>("AzureFunctionBaseUrl");
+        // var azureFunctionKey = _configuration.GetValue<string>("AzureFunction_AddDadJoke_Key");
 
-        var httpClient = new HttpClient();        
-        var url = $"{azureFunctionBaseUrl}api/AddDadJoke?code={azureFunctionKey}";
+        // var httpClient = new HttpClient();        
+        // var url = $"{azureFunctionBaseUrl}api/AddDadJoke?code={azureFunctionKey}";
 
-        var json = JsonSerializer.Serialize(dadJoke);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = httpClient.PostAsync(url, content).Result;
+        // var json = JsonSerializer.Serialize(dadJoke);
+        // var content = new StringContent(json, Encoding.UTF8, "application/json");
+        // var response = httpClient.PostAsync(url, content).Result;
 
-        if (!response.IsSuccessStatusCode)
-        {
-            _logger.LogError($"DadJokeController.Post failed {response.StatusCode}");
-            throw new Exception($"DadJokeController.Post failed {response.StatusCode}");
-        }        
+        // if (!response.IsSuccessStatusCode)
+        // {
+        //     _logger.LogError($"DadJokeController.Post failed {response.StatusCode}");
+        //     throw new Exception($"DadJokeController.Post failed {response.StatusCode}");
+        // }        
     }
 }

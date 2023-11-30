@@ -11,26 +11,31 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 
+<h1 class="text-label">Your Dad Joke Entry</h1>
+<p/>
+<h2 class="text-label">Unfortunately no more entries are being accepted at this point.</h2> 
+
+@* 
 <EditForm Model="@Model" OnValidSubmit="@Submit">
     <h1 class="text-label">Your Dad Joke Entry</h1>
     <h2 class="text-label">Please add your dad joke here:</h2>
     <br/>
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <InputTextArea @bind-Value="Model!.Joke" style="width: 100%;" rows="4" spellcheck="true" maxlength="1000"/>
+    <InputTextArea @bind-Value="Model!.Joke" style="width: 100%;" rows="4" spellcheck="true" maxlength="1000" disabled/>
     <br/>
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <button class="btn btn-primary" type="submit" disabled>Submit</button>
 </EditForm>
-
+ *@
 @code {
-    public AccessToken AccessToken { get; set; }
+    @* public AccessToken AccessToken { get; set; }
     
-    public DadJoke? Model { get; set; }
+    public DadJoke? Model { get; set; } *@
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        Model = new DadJoke
+        @* Model = new DadJoke
         {
             Id=Guid.NewGuid().ToString(),
             DateSubmitted=DateTime.Now,
@@ -52,10 +57,10 @@
         string submittedBy = GetClaim(claims, "name");
         Model!.Email = email;
         Model!.UserId = userId;
-        Model!.SubmittedBy = submittedBy;
+        Model!.SubmittedBy = submittedBy; *@
     }
 
-    private string GetClaim(IDictionary<string, object> claims, string claimType)
+    @* private string GetClaim(IDictionary<string, object> claims, string claimType)
     {
         var claim = claims.FirstOrDefault(c => c.Key == claimType);
         return claim.Value.ToString();
@@ -78,6 +83,8 @@
 
     private async Task Submit()
     {
+        NavigationManager.NavigateTo("/dadjokes");
+
         try
         {
             Model!.DateSubmitted = DateTime.Now;
@@ -96,6 +103,6 @@
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
-        }
-    }
+        } 
+    } *@
 }
