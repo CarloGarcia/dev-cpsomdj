@@ -41,7 +41,7 @@ else
                 <tr>
                     <td style="color: white;">@joke.Joke</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="() => VoteForJoke(joke.Id)" enable>Vote</button>
+                        <button class="btn btn-primary" @onclick="() => VoteForJoke(joke.Id)" disabled>Vote</button>
                     </td>
                 </tr>
             }
@@ -53,12 +53,12 @@ else
     private DadJoke[]? dadjokes;
 
     private Vote? _vote;
-    private bool _bCanVote = true;
+    private bool _bCanVote = false;
 
     public AccessToken AccessToken { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        var accessTokenResult = await AuthorizationService.RequestAccessToken();
+        @* var accessTokenResult = await AuthorizationService.RequestAccessToken();
         if (!accessTokenResult.TryGetToken(out var token))
         {
             throw new InvalidOperationException(
@@ -80,12 +80,12 @@ else
         {
             _bCanVote = votes.Count() == 0;
         };          
-        dadjokes = await Http.GetFromJsonAsync<DadJoke[]>("DadJoke");
+        dadjokes = await Http.GetFromJsonAsync<DadJoke[]>("DadJoke"); *@
     }
 
     private async Task VoteForJoke(string id)
     {
-        Vote vote = new Vote{
+        @* Vote vote = new Vote{
             JokeId = id,
             DateSubmitted = DateTime.Now,
             Email = _vote.Email,
@@ -102,11 +102,12 @@ else
         {
             var error = await response.Content.ReadAsStringAsync();
             Console.WriteLine(error);
-        }
+        } *@
         _bCanVote = false;
+        NavigationManager.NavigateTo("/dadjokes");
     }
 
-    private string GetClaim(IDictionary<string, object> claims, string claimType)
+    @* private string GetClaim(IDictionary<string, object> claims, string claimType)
     {
         var claim = claims.FirstOrDefault(c => c.Key == claimType);
         return claim.Value.ToString();
@@ -125,5 +126,5 @@ else
             .PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
 
         return JsonSerializer.Deserialize<IDictionary<string, object>>(Convert.FromBase64String(base64Payload));
-    }    
+    }     *@
 }
